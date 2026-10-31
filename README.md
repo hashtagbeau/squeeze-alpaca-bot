@@ -4,6 +4,8 @@ Deterministic small-cap momentum bot. It trades an Alpaca **paper** account only
 
 `SPEC.md` is the signed-off rule set. `params.md` is the owner's parameter note. Where they disagree after the spec's "v1 sign-off adds" section, the spec wins. The choices that the spec left open are listed under [Resolved ambiguities](#resolved-ambiguities).
 
+How the pieces fit, with the formulas and made-up walkthroughs: [THE_SQUEEZE_LAB.md](THE_SQUEEZE_LAB.md).
+
 ## Setup
 
 Python 3.11+.
