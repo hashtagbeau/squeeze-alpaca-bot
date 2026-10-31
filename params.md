@@ -1,0 +1,25 @@
+# squeeze trader parameters (set Oct 31 2026, Chan delegated loose numbers; Chan can override)
+- data/broker: Alpaca paper; float from free sources (finviz free page, then SEC filings shares outstanding as fallback; if no source agrees within 20%, missing = no trade)
+- rvol: today cumulative volume / 30-day avg daily volume >= 100x at scan time; prior-day vol < 100K is a grade booster, not required
+- MACD: 12/26/9 on 1-min closes. front side ends at first MACD line cross below signal after news hit
+- lighter volume: avg pullback-candle volume <= 50% of avg squeeze-leg candle volume
+- holds support: pullback low above VWAP and retrace <= 50% of the squeeze leg (leg low to HOD)
+- entry: first 1-min candle trading above prior candle high; MACD line > signal and > 0 at entry
+- stop: pullback low (lowest low of pullback candles)
+- breakeven exit: if price hasn't reached entry + 0.5R within 3 one-minute bars after fill, exit at market
+- heavy tape selling: a red 1-min candle with volume > largest green candle volume of the squeeze leg -> exit
+- stall at resistance: 3 consecutive 1-min bars fail to break HOD (or half/whole dollar target) -> exit
+- target: HOD first; if HOD < 2R away, use next half/whole dollar only if it gives >= 2R, else no trade
+- min R:R: 2.0
+- pop-and-fade lookback: 30 calendar days; any prior day up 50%+ intraday that closed giving back >= 50% of the gain = exclude
+- sizing: risk 1% of account per trade (shares = floor(0.01*equity / (entry-stop))), capped at 100% of settled cash; $2,000 start -> $20 risk
+- grade A: float < 5M, all checks clean, R:R >= 3; B: float 5-20M or R:R 2-3; C: anything marginal -> never trade
+- entry fires intrabar on break of prior completed bar high; order = marketable limit at prior high + min($0.02, 1%), cancel if unfilled in 10s
+- stale: quote <= 5s old at order, bars <= 60s
+- ABCD = not the first pullback after the squeeze leg (prior pullback + new HOD = done for day)
+- second-day: prior day +50% close-to-close or +50% intraday HOD; IPO < 90 days; halt = any LULD halt today pre-entry
+- light-vol pop then heavy selling: red bar after HOD with vol > largest green leg bar, pre-entry = exclude
+- bot data loss/restart while in position = flatten immediately
+- grade A = float<5M & R:R>=3 & prior-day vol<100K & rvol>=100; B = misses an A condition; C = anything marginal
+- float.csv cross-check: I append symbol,float,source,ts_mt for every name that passes cheap filters; bot: row >20% off = FAIL, missing row = use own sources
+- kill switch: /home/box/squeeze-trader/HALT exists = no new entries
